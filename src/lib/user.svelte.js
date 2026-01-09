@@ -2,8 +2,8 @@
 import axios from "axios";
 import thousandsFormat from "./thousandsFormat";
 
-const API_URI = "https://ccpay-40-2fd08e733484.herokuapp.com"
-// const API_URI = "http://localhost:80"
+// const API_URI = "https://ccpay-40-2fd08e733484.herokuapp.com"
+const API_URI = "http://localhost:8080"
 
 export const userState = $state({
     id_token: undefined,

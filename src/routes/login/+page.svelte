@@ -37,7 +37,7 @@
 
     onMount(() =>  {
         google.accounts.id.initialize({
-            client_id: "1028999553685-jmt3d709j855hhvdd6e0f19gh1cdmpcv.apps.googleusercontent.com",
+            client_id: "139622074174-3ijmd86seqaomlu50f8d6ojuc655vuqr.apps.googleusercontent.com",
             callback: handleCredentialResponse
         });
         google.accounts.id.renderButton(
