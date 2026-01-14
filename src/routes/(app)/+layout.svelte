@@ -12,7 +12,7 @@
 	<!-- <script>
         import { userState } from '$lib/user.svelte';
         
-		if(userState.id_token == undefined && window.location.href !== window.location.origin+"/login") {
+		if(userState.session_token == undefined && window.location.href !== window.location.origin+"/login") {
 			window.location.replace(window.location.origin+"/login")
 		}
 	</script> -->
