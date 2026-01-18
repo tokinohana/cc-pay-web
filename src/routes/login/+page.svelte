@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { userState, startSession } from "$lib/user.svelte";
+    import { jwtDecode } from "jwt-decode";
 
     function parseJwt(token) {
         const base64Url = token.split(".")[1];
@@ -14,19 +15,19 @@
         return JSON.parse(jsonPayload);
     }
 
-    function handleCredentialResponse(response) {
+    async function handleCredentialResponse(response) {
         console.log("Encoded JWT ID token:", response.credential);
 
-        startSession(response.credential).then(() => {
-            const user = parseJwt(response.credential);
+        const session = await startSession(response.credential);
+        const user = jwtDecode(response.credential);
 
-            userState.name = user.name;
-            userState.email = user.email;
-            userState.picture = user.picture;
+        userState.name = user.name;
+        userState.email = user.email;
+        userState.picture = user.picture;
+        userState.session_token = session.session_token;
 
-            localStorage.setItem("user", JSON.stringify(userState));
-            window.location.replace(window.location.origin);
-        });
+        localStorage.setItem("user", JSON.stringify(userState));
+        window.location.replace(window.location.origin);
     }
 
     function waitForGoogle() {
