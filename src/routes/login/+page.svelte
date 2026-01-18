@@ -3,18 +3,6 @@
     import { userState, startSession } from "$lib/user.svelte";
     import { jwtDecode } from "jwt-decode";
 
-    function parseJwt(token) {
-        const base64Url = token.split(".")[1];
-        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        const jsonPayload = decodeURIComponent(
-            atob(base64)
-                .split("")
-                .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-                .join("")
-        );
-        return JSON.parse(jsonPayload);
-    }
-
     async function handleCredentialResponse(response) {
         console.log("Encoded JWT ID token:", response.credential);
 
