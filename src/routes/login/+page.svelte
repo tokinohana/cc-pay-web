@@ -3,55 +3,57 @@
     import { userState, startSession } from "$lib/user.svelte";
 
     function parseJwt(token) {
-        var base64Url = token.split(".")[1];
-        var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        var jsonPayload = decodeURIComponent(
-            window
-                .atob(base64)
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
                 .split("")
-                .map(function (c) {
-                    return (
-                        "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
-                    );
-                })
-                .join(""),
+                .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+                .join("")
         );
-
         return JSON.parse(jsonPayload);
     }
+
     function handleCredentialResponse(response) {
-        console.log("Encoded JWT ID token: " + response.credential);
+        console.log("Encoded JWT ID token:", response.credential);
+
         startSession(response.credential).then(() => {
             const user = parseJwt(response.credential);
-            console.log(user);
-            if (user.email.split("@")[1] == "kanisius.sch.id") {
-                // sessionStorage.setItem("session_token", response.credential)
-                // userState.session_token = response.credential
-                // sessionStorage.setItem("name", user.name)
-                userState.name = user.name;
-                // sessionStorage.setItem("email", user.email)
-                userState.email = user.email;
-                // sessionStorage.setItem("picture", user.picture)
-                userState.picture = user.picture;
-                // alert(JSON.stringify(userState))
-                localStorage.setItem("user", JSON.stringify(userState));
-                window.location.replace(window.location.origin);
-            } else {
-                alert("Mohon gunakan email sekolah (___@kanisius.sch.id)");
-                window.location.replace(window.location.origin + "/login");
-            }
+
+            userState.name = user.name;
+            userState.email = user.email;
+            userState.picture = user.picture;
+
+            localStorage.setItem("user", JSON.stringify(userState));
+            window.location.replace(window.location.origin);
         });
     }
 
-    onMount(() => {
+    function waitForGoogle() {
+        return new Promise((resolve) => {
+            if (window.google) return resolve();
+
+            const interval = setInterval(() => {
+                if (window.google) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 50);
+        });
+    }
+
+    onMount(async () => {
+        await waitForGoogle();
+
         google.accounts.id.initialize({
             client_id:
-                "139622074174-3ijmd86seqaomlu50f8d6ojuc655vuqr.apps.googleusercontent.com",
+                "353499692029-rinrhlrh96le29aenai9fr8fbfq2o7gp.apps.googleusercontent.com",
             callback: handleCredentialResponse,
         });
+
         google.accounts.id.renderButton(
             document.getElementById("buttonDiv"),
-            { theme: "outline", size: "medium", shape: "pill" }, // customization attributes
+            { theme: "outline", size: "medium", shape: "pill" }
         );
     });
 </script>
@@ -61,5 +63,6 @@
         <h2 style="font-family: asimovian;" class="italic">Welcome to</h2>
         <h1 class="!text-5xl">CC PAY ZOZS</h1>
     </div>
+
     <div id="buttonDiv" class="scale-125 mb-6"></div>
 </div>

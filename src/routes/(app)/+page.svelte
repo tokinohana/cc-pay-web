@@ -129,7 +129,7 @@
             </div>
             <div class="flex flex-col h-full w-fit align-middle ml-2">
                 <span id="balance" class="font-bold leading-5"
-                    >{userState.balance}</span
+                    >{$userState.balance}</span
                 >
                 <span id="name" class="leading-5 wrap-anywhere"
                     >{userState.name}</span

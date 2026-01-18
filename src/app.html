@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<!-- developed by @tokinohana -->
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="google-signin-client_id" content="139622074174-3ijmd86seqaomlu50f8d6ojuc655vuqr.apps.googleusercontent.com">
-        <link rel="icon" href="favicon.png" />
-        <title>CCPAY - 2025</title>
-		%sveltekit.head%
-	</head>	
-	<body class="min-h-dvh overflow-x-hidden" data-sveltekit-preload-data="hover">
-        <div style="display: contents">%sveltekit.body%</div>
-        <script src="https://accounts.google.com/gsi/client" async></script>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="favicon.png" />
+    <title>CCPAY - 2025</title>
+    %sveltekit.head%
+  </head>
+  <body class="min-h-dvh overflow-x-hidden" data-sveltekit-preload-data="hover">
+    <div style="display: contents">%sveltekit.body%</div>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </body>
 </html>
