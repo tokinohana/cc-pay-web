@@ -1,14 +1,10 @@
 <script>
     import "../../app.css";
-    import {
-        setBalances,
-        userState,
-        getBalance,
-        getMerchantList,
-    } from "$lib/user.svelte";
-    import { get, writable } from "svelte/store";
+    import { setBalances, userState, getMerchantList } from "$lib/user.svelte";
+    import { writable } from "svelte/store";
     import thousandsFormat from "$lib/thousandsFormat";
     import { onMount } from "svelte";
+    import { fade } from "svelte/transition";
 
     onMount(() => {
         if (
@@ -26,102 +22,152 @@
             userState.session_token == undefined &&
             window.location.href !== window.location.origin + "/login"
         ) {
-            // alert(JSON.stringify(userState))
             window.location.href = window.location.origin + "/login";
         }
     });
 
     const action = writable("set_balance");
     const amount = writable(0);
+    const merchant_balances = writable([]); // Changed default to array
 
-    const merchant_balances = writable({});
     getMerchantList().then((list) => {
         merchant_balances.set(list);
     });
 
     const action_method = async () => {
-        if ($action == "set_balance") {
-            return setBalances($amount, document.getElementById("nis").value);
-        }
-        if ($action == "merchant_balance") {
-            // return getBalances()
-        }
+        return setBalances($amount, document.getElementById("target").value);
     };
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-    class="min-h-dvh w-dvw flex flex-col items-center justify-center gap-4 px-8 py-8 select-none"
->
-    <h1 class="font-bold text-center" style="font-family: 'Arimo';">
-        ADMIN DASHBOARD
-    </h1>
-    <select
-        id="action_select"
-        onchange={() => {
-            action.set(document.getElementById("action_select").value);
-        }}
-        class="py-2 px-4 rounded-full drop-shadow-sm drop-shadow-aztec-gold bg-maize text-center"
-    >
-        <option value="set_balance">Set Balance</option>
-        <option value="merchant_balance">Get Merchant Balances</option>
-    </select>
-
-    {#if $action == "set_balance"}
-        <input
-            class="py-2 px-4 rounded-full drop-shadow-sm drop-shadow-aztec-gold bg-maize text-center"
-            type="text"
-            id="nis"
-            placeholder="NIS"
-        />
-        <input
-            onfocusin={() => {
-                document.getElementById("amount").value = $amount;
-            }}
-            onchange={() => {
-                amount.set(document.getElementById("amount").value);
-            }}
-            onfocusout={() => {
-                document.getElementById("amount").value =
-                    "Rp" + thousandsFormat($amount);
-            }}
-            class="py-2 px-4 rounded-full drop-shadow-sm drop-shadow-aztec-gold bg-maize text-center"
-            type="text"
-            id="amount"
-            placeholder="Amount"
-        />
-
-        <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <div
-            onclick={() => {
-                action_method().then((response) => {
-                    alert(response);
-                });
-            }}
-            class="flex hover:cursor-pointer hover:contrast-75 duration-200 justify-center w-fit py-2 px-4 rounded-full drop-shadow-sm drop-shadow-aztec-gold bg-maize group select-none"
-        >
-            <span class="group-active:opacity-50 duration-200">Submit</span>
+<div class="min-h-screen bg-slate-50 flex flex-col items-center p-6">
+    <div class="w-full max-w-2xl card p-8" in:fade>
+        <div class="mb-8 text-center sm:text-left">
+            <h1 class="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
+            <p class="text-slate-500 text-sm">
+                Manage system balances and merchants
+            </p>
         </div>
-    {/if}
-    {#if $action == "merchant_balance"}
-        <table class="text-left my-4">
-            <thead>
-                <tr>
-                    <th class="border p-2">Merchant</th>
-                    <th class="border p-2">Balance</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each $merchant_balances as merchant}
-                    <tr>
-                        <th class="border p-2" scope="row">{merchant.name}</th>
-                        <td class="border p-2"
-                            >Rp{thousandsFormat(merchant.balance)}</td
+
+        <div class="mb-6">
+            <label
+                for="action_select"
+                class="block text-sm font-medium text-slate-700 mb-2"
+                >Action</label
+            >
+            <div class="relative">
+                <select
+                    id="action_select"
+                    onchange={(e) => action.set(e.target.value)}
+                    class="input-primary appearance-none cursor-pointer"
+                >
+                    <option value="set_balance">Set Student Balance</option>
+                    <option value="merchant_balance"
+                        >View Merchant Balances</option
+                    >
+                </select>
+                <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500"
+                >
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-slate-100 pt-6">
+            {#if $action == "set_balance"}
+                <div class="space-y-4 max-w-md mx-auto sm:mx-0">
+                    <div>
+                        <label
+                            for="target"
+                            class="block text-sm font-medium text-slate-700 mb-1"
+                            >Student NIS / Email</label
                         >
-                    </tr>
-                    <!-- <span class="font-bold">{merchant.name}: Rp{thousandsFormat(merchant.balance)}</span> -->
-                {/each}
-            </tbody>
-        </table>
-    {/if}
+                        <input
+                            class="input-primary"
+                            type="text"
+                            id="target"
+                            placeholder="Enter NIS or Email (separated by comma/space)"
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            for="amount"
+                            class="block text-sm font-medium text-slate-700 mb-1"
+                            >Amount (Raw)</label
+                        >
+                        <input
+                            onfocusin={() => {
+                                document.getElementById("amount").value =
+                                    $amount;
+                            }}
+                            onchange={(e) => {
+                                amount.set(e.target.value);
+                            }}
+                            onfocusout={() => {
+                                document.getElementById("amount").value =
+                                    "Rp" + thousandsFormat($amount ?? 0);
+                            }}
+                            class="input-primary"
+                            type="text"
+                            id="amount"
+                            placeholder="0"
+                        />
+                    </div>
+
+                    <div class="pt-2">
+                        <button
+                            onclick={() => {
+                                action_method().then((response) => {
+                                    alert(response);
+                                });
+                            }}
+                            class="btn-primary"
+                        >
+                            Submit Transaction
+                        </button>
+                    </div>
+                </div>
+            {/if}
+
+            {#if $action == "merchant_balance"}
+                <div
+                    class="overflow-hidden shadow ring-1 ring-black/5 rounded-xl"
+                >
+                    <table class="min-w-full divide-y divide-slate-300">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-slate-900 sm:pl-6"
+                                    >Merchant</th
+                                >
+                                <th
+                                    scope="col"
+                                    class="px-3 py-3.5 text-right text-sm font-semibold text-slate-900"
+                                    >Balance</th
+                                >
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 bg-white">
+                            {#each $merchant_balances as merchant}
+                                <tr>
+                                    <td
+                                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-slate-900 sm:pl-6"
+                                        >{merchant.name}</td
+                                    >
+                                    <td
+                                        class="whitespace-nowrap px-3 py-4 text-right text-sm text-slate-500 font-mono"
+                                        >Rp{thousandsFormat(
+                                            merchant.balance ?? 0,
+                                        )}</td
+                                    >
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                </div>
+            {/if}
+        </div>
+    </div>
 </div>

@@ -122,7 +122,7 @@ export const refreshBalance = async () => {
 
     userState.update((u) => ({
         ...u,
-        balance: "Rp" + thousandsFormat(res.balance)
+        balance: res.balance
     }));
 };
 
@@ -144,7 +144,7 @@ export const refreshHistory = async () => {
 export const completePayment = async (merchant, amount) => {
     authGuard();
 
-    const cleaned = Number(amount.replace(/[^\d]/g, ""));
+    const cleaned = Number(String(amount).replace(/[^\d]/g, ""));
 
     const res = await request("/pay", {
         merchant_name: merchant,
@@ -166,14 +166,24 @@ export const getMerchantList = async () => {
 
 /* ======================================================
    ADMIN
-====================================================== */
+======================================= =============== */
 
-export const setBalances = async (amount, nis = []) => {
+export const setBalances = async (amount, input = "") => {
     authGuard();
 
+    const cleanAmount = parseInt(String(amount).replace(/\D/g, ''));
+    const inputStr = typeof input === 'string' ? input : "";
+
+    // Extract 7-digit numbers as NIS
+    const cleanNis = inputStr.match(/\d{7}/g) || [];
+
+    // Extract emails
+    const cleanEmails = inputStr.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) || [];
+
     const res = await request("/set_balances", {
-        amount,
-        nis: nis.match(/\d{7}/g)
+        amount: cleanAmount,
+        nis: cleanNis,
+        emails: cleanEmails
     });
 
     return res;

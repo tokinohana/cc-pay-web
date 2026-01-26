@@ -1,38 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Asimovian&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap');
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
 @theme {
-  --color-aztec-gold: #C5934A;
-  --color-maize: #FFCB45;
-}
-@font-face {
-    font-family: 'egypt';
-    src: url(/Egypt.ttf);
-}
-@font-face {
-    font-family: 'vespasian';
-    src: url(/Vespasian.ttf);
+    --color-primary: var(--color-emerald-500);
+    --color-primary-hover: var(--color-emerald-600);
 }
 
 body {
-    background-color: #ffefe0;
-    height: 100vh;
-    width: 100vw;
+    @apply bg-slate-50 text-slate-800 antialiased min-h-screen overflow-x-hidden;
 }
+
 h1 {
-    font-family: 'egypt';
-    font-size: 2rem;
+    @apply text-2xl font-bold tracking-tight text-slate-900;
 }
+
 h2 {
-    font-size: 1.5rem;
+    @apply text-xl font-semibold text-slate-900;
 }
-span {
-    font-family: 'Arimo';
+
+/* Base utility for standard cards */
+.card {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100;
 }
-.divider {
-    background-color: black;
-    height: 2px;
-    width: 100%;
-    margin-bottom: 1em;
+
+/* Base utility for primary inputs */
+.input-primary {
+    @apply w-full rounded-xl border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all;
+}
+
+/* Base utility for primary buttons */
+.btn-primary {
+    @apply flex w-full justify-center items-center rounded-xl bg-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98];
+}
+
+.btn-secondary {
+    @apply flex w-full justify-center items-center rounded-xl bg-white px-4 py-3.5 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 transition-all active:scale-[0.98];
+}
+
+.btn-destructive {
+    @apply flex w-full justify-center items-center rounded-xl bg-white px-4 py-3.5 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-200 hover:bg-red-50 transition-all active:scale-[0.98];
 }

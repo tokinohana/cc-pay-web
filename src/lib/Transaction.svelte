@@ -1,39 +1,51 @@
 <script>
-    import { onMount } from "svelte";
     import thousandsFormat from "./thousandsFormat";
-    
+
     export let label;
     export let amount;
     export let timestamp;
-    let custom = false;
-    const date = new Date(timestamp*1000);
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    // console.log(label)
-    if(label == null) {
-        // console.log("custom")
-        custom = true;
-        onMount(() => {
-            document.getElementById("icon"+timestamp).remove()
-        })
-        if(amount == 0) {
-            label = "Reset";
+    const date = new Date(timestamp * 1000);
+    // Simple date formatter
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    }).format(date);
+
+    let isCustom = false;
+    let displayLabel = label;
+
+    if (label == null) {
+        isCustom = true;
+        if (amount == 0) {
+            displayLabel = "Reset";
         } else {
-            label = "Coupon";
+            displayLabel = "Coupon Top-up";
         }
     }
 </script>
 
-<div class="flex flex-col w-full">
-    <div class="flex flex-row items-center gap-2 p-2 justify-between w-full">
-        <i id="icon{timestamp}" class="fa-solid fa-money-bill-transfer"></i>
-        <div class="flex flex-row items-center justify-between w-full">
-            <div class="flex flex-col">
-                <span class="font-bold leading-5">{label}</span>
-                <span class="{custom ? 'text-xs leading-5' : 'hidden'}">{date.getDate()} {months[date.getMonth()]} {date.getFullYear()}</span>
-            </div>
-            <span class="{custom ? 'font-bold '+(amount == 0 ? 'text-red-800' : 'text-green-800') : ''}">{custom ? '' : '-'}Rp{thousandsFormat(amount)}</span>
-        </div>
+<div
+    class="flex items-center justify-between py-4 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors px-2 -mx-2 rounded-lg"
+>
+    <div class="flex flex-col gap-0.5">
+        <span class="font-medium text-slate-900 line-clamp-1"
+            >{displayLabel}</span
+        >
+        <span class="text-xs text-slate-400">{formattedDate}</span>
     </div>
-    <div class="w-full bg-black/25" style="height: 1px;"></div>
+
+    <div class="flex flex-col items-end">
+        <span
+            class="font-semibold tabular-nums tracking-tight {isCustom
+                ? amount === 0
+                    ? 'text-slate-500'
+                    : 'text-emerald-600'
+                : 'text-slate-800'}"
+        >
+            {isCustom ? "+" : "-"}Rp{thousandsFormat(amount ?? 0)}
+        </span>
+    </div>
 </div>

@@ -16,10 +16,11 @@
 			window.location.replace(window.location.origin+"/login")
 		}
 	</script> -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0&icon_names=wallet" />
 </svelte:head>
 
-<div class="h-dvh w-screen select-none" style="padding: 10%;">
-    <h1>CC PAY ZOZS</h1>
-    <div class="divider"></div>
+<div class="h-dvh w-screen select-none">
+    <!-- <h1>CC PAY ZOZS</h1>
+    <div class="divider"></div> -->
     {@render children?.()}
 </div>
