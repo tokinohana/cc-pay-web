@@ -3,8 +3,8 @@ import { writable, get } from "svelte/store";
 import { browser } from "$app/environment";
 import thousandsFormat from "./thousandsFormat";
 
-// const API_URI = "https://ccpay-40-2fd08e733484.herokuapp.com";
-const API_URI = "http://localhost:8080";
+const API_URI = "https://ccpay-mun-fa716ec87e52.herokuapp.com/";
+// const API_URI = "http://localhost:8080";
 
 /* ======================================================
     USER STORE
