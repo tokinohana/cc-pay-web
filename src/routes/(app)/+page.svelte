@@ -27,10 +27,6 @@
     let isProcessing = false;
     let successData = { merchant: "", amount: 0 };
 
-    getMerchantList().then((list) => {
-        merchant_list.set(list.map((m) => m.name));
-    });
-
     onMount(() => {
         // 1. Restore auth state
         const storedUser = localStorage.getItem("user");
@@ -58,6 +54,10 @@
 
         // 3. QR Scanner setup
         // Moved to openPay to ensure DOM element exists
+
+        getMerchantList().then((list) => {
+            merchant_list.set(list.map((m) => m.name));
+        });
     });
 
     let qrScanner;

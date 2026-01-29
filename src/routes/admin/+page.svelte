@@ -24,15 +24,15 @@
         ) {
             window.location.href = window.location.origin + "/login";
         }
+
+        getMerchantList().then((list) => {
+            merchant_balances.set(list);
+        });
     });
 
     const action = writable("set_balance");
     const amount = writable(0);
     const merchant_balances = writable([]); // Changed default to array
-
-    getMerchantList().then((list) => {
-        merchant_balances.set(list);
-    });
 
     const action_method = async () => {
         return setBalances($amount, document.getElementById("target").value);
