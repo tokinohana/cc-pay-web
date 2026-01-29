@@ -1,6 +1,5 @@
 <script>
 	import '../../app.css';
-    import bg from '$lib/assets/bg.jpg';
 	
 	let { children } = $props();
 </script>
@@ -13,7 +12,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0&icon_names=wallet" />
 </svelte:head>
 
-<div class="w-screen h-dvh absolute overflow-hidden bg-cover -z-20" style="background-image: url({bg});"></div>
+<div class="w-screen h-dvh absolute overflow-hidden bg-cover -z-20"></div>
 <!-- <div class="w-screen h-screen absolute -z-10" style="background: linear-gradient(180deg,rgba(0, 0, 0, 0.275) 20%, rgba(255, 255, 255, 0) 50%);"></div> -->
 <div class="w-screen h-dvh">
     {@render children?.()}
