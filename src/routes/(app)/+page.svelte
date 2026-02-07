@@ -125,6 +125,13 @@
         // Fix: Ensure price is string before replace
         const amountStr = String($price);
         const amountClean = amountStr.replace(/\D/g, ""); // Ensure number
+        const amount = parseInt(amountClean) || 0;
+
+        if (amount < 5000) {
+            alert("Minimum transaction is Rp. 5,000");
+            isProcessing = false;
+            return;
+        }
 
         try {
             const response = await completePayment($merchant, amountClean);
@@ -388,14 +395,24 @@
                                     class="input-primary pl-14 text-lg font-semibold"
                                     type="text"
                                     inputmode="numeric"
-                                    placeholder="0"
+                                    placeholder="Min. 5,000"
                                     bind:value={$price}
                                 />
                             </div>
+                            {#if $price && (parseInt(String($price).replace(/\D/g, "")) || 0) < 5000}
+                                <p
+                                    class="text-xs text-red-500 mt-1 font-medium"
+                                >
+                                    Minimum transaction is Rp. 5,000
+                                </p>
+                            {/if}
                         </div>
 
                         <button
-                            disabled={!$price || isProcessing}
+                            disabled={!$price ||
+                                isProcessing ||
+                                (parseInt(String($price).replace(/\D/g, "")) ||
+                                    0) < 5000}
                             onclick={handlePayment}
                             class="btn-primary w-full py-4 text-base mt-4"
                         >

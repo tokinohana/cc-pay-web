@@ -146,6 +146,10 @@ export const completePayment = async (merchant, amount) => {
 
     const cleaned = Number(String(amount).replace(/[^\d]/g, ""));
 
+    if (cleaned < 5000) {
+        throw new Error("Minimum transaction is Rp. 5,000");
+    }
+
     const res = await request("/pay", {
         merchant_name: merchant,
         amount: cleaned
