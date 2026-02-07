@@ -164,6 +164,23 @@ export const getMerchantList = async () => {
     return res.data;
 };
 
+export const getMerchantHistory = async (merchant_name) => {
+    // No auth guard needed as per requirements (frontend selects merchant)
+    // But good practice to ensure we have a session if backend requires it (it currently doesn't for this endpoint based on implementation)
+    // The implementation in endpoints.js only requires merchant_name in body
+
+    // However, for consistency with other POST requests that might expect session_token if we used request() helper
+    // Let's use request helper which attaches session token if available.
+    // Backend implementation does not check for session_token, so it's fine.
+
+    // Actually, let's use axios directly if we want to bypass auth check entirely or use request if we want to be consistent.
+    // Since this is an admin/merchant feature, let's assume it might need auth later.
+    // For now, simple post.
+
+    const res = await axios.post(`${API_URI}/merchant_history`, { merchant_name });
+    return res.data;
+};
+
 /* ======================================================
    ADMIN
 ======================================= =============== */
