@@ -385,7 +385,7 @@
                                 >
                                 <input
                                     id="amount"
-                                    class="input-primary pl-12 text-lg font-semibold"
+                                    class="input-primary pl-14 text-lg font-semibold"
                                     type="number"
                                     placeholder="0"
                                     bind:value={$price}
