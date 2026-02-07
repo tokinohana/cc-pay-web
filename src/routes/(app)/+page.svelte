@@ -140,7 +140,12 @@
                 alert(response); // Fallback error
             }
         } catch (e) {
-            alert("Payment failed: " + e.message);
+            console.error(e);
+            if (e.response?.status === 400) {
+                alert("Payment failed: Insufficient balance");
+            } else {
+                alert("Payment failed: " + (e.message || "Unknown error"));
+            }
         } finally {
             isProcessing = false;
         }
